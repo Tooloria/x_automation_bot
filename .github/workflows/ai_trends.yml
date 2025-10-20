@@ -1,0 +1,29 @@
+name: AI News Auto Poster
+
+on:
+  schedule:
+    - cron: "0 */3 * * *" # every 3 hours
+  workflow_dispatch:
+
+jobs:
+  auto_post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run AI News Poster
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          BLUESKY_USER: ${{ secrets.BLUESKY_USER }}
+          BLUESKY_PASS: ${{ secrets.BLUESKY_PASS }}
+          TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
+        run: python ai_news_poster.py
